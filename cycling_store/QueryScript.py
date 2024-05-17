@@ -6,7 +6,7 @@ from django.conf import settings
 os.environ["DJANGO_SETTINGS_MODULE"] = "cycling_store.settings"
 django.setup()
 
-print('SCRIPT START ************* SUCCESS ************') # Now you have django, so you can import models and do stuff as normal
+print(f'SCRIPT START ************* SUCCESS ************ \n') # Now you have django, so you can import models and do stuff as normal
 
 ### NOTE
 # DO NOT CHANGE CODE ABOVE THIS LINE: # WORK BELOW
@@ -14,21 +14,14 @@ from inventory_system.models import *
 
 # GLOBAL VARIABLES THAT GIVE ACCESS TO KEY PARTS OF DATA
 
-all_customers = Customer.objects.all()
-all_items = Inventory.objects.all()
-all_orders = Order.objects.all()
-
-
-
-print("MAIN MENU: \n ")
 
 # CREATE CUSTOMER
 
 def create_customer():
     print("Enter First Name")
-    new_first_name = input("").strip().casefold().strip().casefold()
+    new_first_name = input("").strip().title()
     print("Enter Last Name")
-    new_last_name = input("").strip().casefold()
+    new_last_name = input("").strip().title()
     new_customer = Customer(last_name = new_last_name, first_name = new_first_name)
     new_customer.save()
     print("New Customer Created Successfully!")
@@ -37,6 +30,7 @@ def create_customer():
 
 def lookup_customers():
     print(f"Here are all the customers. \n Customer List: \n" )
+    all_customers = Customer.objects.all()
     for person in all_customers:
         print(f"{person.last_name}, {person.first_name}")
 
@@ -44,13 +38,13 @@ def lookup_customers():
 
 def update_customer():
     print("Which Customer Would You Like to Update? \n Last Name: ")
-    current_last_name = input("").strip().casefold()
+    current_last_name = input("")
     print("First Name: ")
-    current_first_name = input("").strip().casefold()
+    current_first_name = input("")
     print("What is the New Last Name?")
-    updated_last_name = input("").strip().casefold()
+    updated_last_name = input("")
     print("What is the New First Name?")
-    updated_first_name = input("").strip().casefold()
+    updated_first_name = input("")
 
     updated_customer = Customer.objects.filter(last_name = current_last_name, first_name = current_first_name).first()
     if updated_customer:
@@ -66,9 +60,9 @@ def update_customer():
 
 def delete_customer():
     print("Which Customer Would You Like to DELETE? \n Last Name: ")
-    delete_last_name = input("").strip().casefold()
+    delete_last_name = input("")
     print("First Name: ")
-    delete_first_name = input("").strip().casefold()
+    delete_first_name = input("")
 
     Customer.objects.filter(last_name = delete_last_name , first_name = delete_first_name).first().delete()
     print("DELETED Customer Successfully!")
@@ -78,9 +72,9 @@ def delete_customer():
 
 def create_inventory():
     print("Enter New Item Name")
-    new_item_name = input("").strip().casefold()
+    new_item_name = input("")
     print("Enter New Item Qty")
-    new_item_qty = input("").strip().casefold()
+    new_item_qty = input("")
     new_item = Inventory(item = new_item_name, in_stock = new_item_qty)
     new_item.save()
     print("New Item Added To Inventory Successfully!")
@@ -91,6 +85,7 @@ def create_inventory():
 def lookup_inventory():
             # all_items = Inventory.objects.all()
             print(f"Here is the Entire Inventory. \n Inventory List: \n" )
+            all_items = Inventory.objects.all()
             for item in all_items:
                 print(item)
 
@@ -99,9 +94,9 @@ def lookup_inventory():
 
 def update_inventory():
             print("Which Item would you like to Update? \n Item Name: ")
-            current_item_name = input("").strip().casefold()
+            current_item_name = input("")
             print("New Quantity: ")
-            new_item_qty = int(input("").strip().casefold())
+            new_item_qty = int(input(""))
 
             updated_item = Inventory.objects.filter(item = current_item_name).first()
             if updated_item:
@@ -115,8 +110,8 @@ def update_inventory():
 # DELETE INVENTORY TYPE
 
 def delete_inventory():
-            print("Which Item would you like to DELETE? Item Name: ")
-            delete_item_name = input("").strip().casefold()
+            print("Which Item would you like to DELETE? \n Item Name: ")
+            delete_item_name = input("")
             
             Inventory.objects.filter(item = delete_item_name).first().delete()
             print("Item Has Been Deleted From the Inventory Successfully!")
@@ -126,9 +121,9 @@ def delete_inventory():
 
 def create_order():
             print("Enter Information to Place Order: \n Which Customer is Ordering? \n Last Name: ")
-            customer_last_name = input("").strip().casefold()
+            customer_last_name = input("")
             print("First Name:")
-            customer_first_name = input("").strip().casefold()
+            customer_first_name = input("")
 
             try:
                 existing_customer = Customer.objects.get(last_name = customer_last_name, first_name = customer_first_name)
@@ -137,7 +132,7 @@ def create_order():
                   return
 
             print("What Item Are They Ordering?")
-            customer_item = input("").casefold().strip()
+            customer_item = input("")
 
             try:
                 existing_item = Inventory.objects.get(item = customer_item)
@@ -146,7 +141,7 @@ def create_order():
                 return
 
             print("How Many?")
-            customer_qty = int(input("").strip().casefold())
+            customer_qty = int(input(""))
 
             if existing_item.in_stock >= customer_qty:
                   existing_item.in_stock -= customer_qty
@@ -156,7 +151,7 @@ def create_order():
                 return
 
             print("Are They Paying Now?")
-            customer_paid = input("").strip().casefold()
+            customer_paid = input("")
 
             if customer_paid.casefold() == "yes":
                 customer_paid = True
@@ -173,6 +168,7 @@ def create_order():
 def lookup_orders():
             # all_orders = Order.objects.all()
             print(f"Order List: \n" )
+            all_orders = Order.objects.all()
             for order in all_orders:
                 print(order)
 
@@ -180,13 +176,13 @@ def lookup_orders():
 
 def update_order():
         print("Which Way Would You Like to Look Up the Order By? \n [1] Last Name, First Name \n [2] Order Number \n [3] Item Name \n [4] Order Date")
-        lookup_method = int(input("").strip().casefold())
+        lookup_method = int(input(""))
         
         if lookup_method == 1:
             print("What is the Last Name? :")
-            lookup_last_name = input("").strip().casefold()
+            lookup_last_name = input("")
             print("What is the First Name? :")
-            lookup_first_name = input("").strip().casefold()
+            lookup_first_name = input("")
             
             try:
                 existing_customer = Customer.objects.get(last_name = lookup_last_name, first_name = lookup_first_name)
@@ -194,7 +190,7 @@ def update_order():
                 for order in orders:
                      print(order) # I may have to create a string that contains order.id, .customer, .qty, .item, .paid
                 print("Enter the Order Id You Want to Update: ")
-                order_id = int(input("").strip().casefold())
+                order_id = int(input(""))
                 order = orders.get(id = order_id)
             
             except Customer.DoesNotExist:
@@ -208,7 +204,7 @@ def update_order():
 
         elif lookup_method == 2:
             print("Enter the Order Number: ")
-            order_id = int(input("").strip().casefold())
+            order_id = int(input(""))
             try:
                 order = Order.objects.get(id = order_id)
             except Order.DoesNotExist:
@@ -217,7 +213,7 @@ def update_order():
 
         elif lookup_method == 3:
             print("Enter the Item Name: ")
-            item_name = input("").strip().casefold()
+            item_name = input("")
 
             try:
                 query_item = Inventory.objects.get(item = item_name)
@@ -225,7 +221,7 @@ def update_order():
                 for order in orders:
                     print(order)
                 print("Enter the Order Id You Want to Update: ")
-                order_id = int(input("").strip().casefold())
+                order_id = int(input(""))
                 order = orders.get(id = order_id)
             
             except Inventory.DoesNotExist:
@@ -238,13 +234,13 @@ def update_order():
 
         elif lookup_method == 4:
             print("Enter Order Date in YYYY-MM-DD Format: ")
-            order_date = input("").strip().casefold()
+            order_date = input("")
             try:
                 orders = Order.objects.filter(date = order_date)
                 for order in orders:
                     print(order)
                 print("Enter the Order Id You Want to Update: ")
-                order_id = int(input("").strip().casefold())
+                order_id = int(input(""))
                 order = orders.get(id = order_id)
 
             except Order.DoesNotExist:
@@ -257,11 +253,11 @@ def update_order():
 
         if order:
             print("Which Aspect of the Order Would You Like to Update? \n [1] Items \n [2] Quantity \n [3] Paid Status")
-            specific_aspect = int(input("").strip().casefold())
+            specific_aspect = int(input(""))
         
         if specific_aspect == 1:
             print("Which Item Would You Like to Add? :")
-            additional_item = input("").strip().casefold()
+            additional_item = input("")
 
             try:
                 additional_item = Inventory.objects.get(item = additional_item)
@@ -276,7 +272,7 @@ def update_order():
 
         elif specific_aspect == 2:
             print("Enter the New Quantity: ")
-            new_qty = int(input("").strip().casefold())
+            new_qty = int(input(""))
             if order.item.in_stock + order.qty >= new_qty:
                  order.item.in_stock += order.qty - new_qty
                  order.qty = new_qty
@@ -288,7 +284,7 @@ def update_order():
 
         elif specific_aspect == 3:
             print("Has the Order Been Paid For?")
-            paid_status = input("").strip().casefold() == "yes" # CREATES BOOLEAN VALUE
+            paid_status = input("") == "yes" # CREATES BOOLEAN VALUE
             order.paid = paid_status
             order.save()
             print("Order Status Has Been Updated Successfully")
@@ -301,10 +297,91 @@ def update_order():
 
 def delete_order():
             print("Which Order Number would you like to DELETE?")
-            delete_purchase_order = input("").strip().casefold()
+            delete_purchase_order = input("")
             
             # Try and handle multiple through if else statements
             Order.objects.filter(id = delete_purchase_order).first().delete()
+            print("Order Deleted Successfully")
+
+
+def display_menu():
+    print("MAIN MENU: \n [1] Customers  \n [2] Inventory \n [3] Orders \n")
+    menu_input = input("")
+    
+    if menu_input == "1":
+        print("What Would You Like to Do With the Customers? \n [1] Create New \n [2] Look Up All \n [3] Edit \n [4] Delete \n")
+        choice_entry = menu_input = input("")
+        
+        if choice_entry == "1":
+             create_customer()
+             display_menu()
+        elif choice_entry == "2":
+             lookup_customers()
+             display_menu()
+        elif choice_entry == "3":
+             update_customer()
+             display_menu()
+        elif choice_entry == "4":
+             delete_customer()
+             display_menu()
+        else:
+            print("Invalid Input. Terminating Program. Better Luck Next Time Slick. \n")
+
+    elif menu_input == "2":
+        print("What Would You Like to Do With the Inventory? \n [1] Create New \n [2] Look Up All \n [3] Edit \n [4] Delete \n")
+        choice_entry = menu_input = input("")
+        
+        if choice_entry == "1":
+             create_inventory()
+             display_menu()
+        elif choice_entry == "2":
+             lookup_inventory()
+             display_menu()
+        elif choice_entry == "3":
+             update_inventory()
+             display_menu()
+        elif choice_entry == "4":
+             delete_inventory()
+             display_menu()
+        else:
+            print("Invalid Input. Terminating Program. Better Luck Next Time Slick. \n")
+
+    elif menu_input == "3":
+        print("What Would You Like to Do With the Orders? \n [1] Create New \n [2] Look Up All \n [3] Edit \n [4] Delete \n")
+        choice_entry = menu_input = input("")
+        
+        if choice_entry == "1":
+             create_order()
+             display_menu()
+        elif choice_entry == "2":
+             lookup_orders()
+             display_menu()
+        elif choice_entry == "3":
+             update_order()
+             display_menu()
+        elif choice_entry == "4":
+             delete_order()
+             display_menu()
+        else:
+            print("Invalid Input. Terminating Program. Better Luck Next Time Slick. \n")
+    
+    else:
+        print("Invalid Input. Terminating Program. Better Luck Next Time Slick. \n")
+
+display_menu()
+# create_inventory()
+
+# lookup_customers()
+# lookup_inventory()
+# lookup_orders()
+
+# create_customer()
+
+# delete_customer()
+# delete_inventory()
+# delete_order()
+
+
 
 
 # update_order() # Needs to handle adding items
