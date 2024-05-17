@@ -2,7 +2,7 @@ from django.db import migrations, models
 from django.utils import timezone 
 # Create your models here.
 
-class Transport(models.Model):
+class Inventory(models.Model):
     item = models.TextField(blank=True)
     in_stock = models.PositiveIntegerField(default=0)
 
@@ -19,8 +19,10 @@ class Customer(models.Model):
 class Order(models.Model):
     date = models.DateField(default=timezone.now)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    item = models.ForeignKey(Transport, on_delete=models.SET_NULL, null=True)
+    item = models.ForeignKey(Inventory, on_delete=models.SET_NULL, null=True)
+    qty = models.PositiveIntegerField(default=1)
     paid = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.customer} bought a {self.item} on {self.date}. Paid?: {self.paid}" 
+        item_display = self.item.item if self.item else "Deleted Item"
+        return f"{self.id:05d} {self.customer} bought  x{self.qty} {item_display} on {self.date}. Paid?: {self.paid}" 
