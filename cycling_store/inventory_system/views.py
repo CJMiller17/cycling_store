@@ -31,6 +31,7 @@ class OrderViewSet(viewsets.ModelViewSet): #This is the end point
 
     def create(self, request):
         mutable_data_copy = request.data.copy()
+
         item_id = mutable_data_copy.get('item')
         item = Inventory.objects.get(pk=item_id) # The two tables talk to each other now
         qty_ordered = int(mutable_data_copy.get('qty'))
