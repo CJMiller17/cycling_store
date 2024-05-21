@@ -1,17 +1,17 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
-
+from django.db import transaction
 from .models import *
 from .serializers import *
 
 class InventoryViewSet(viewsets.ModelViewSet): #This is the end point
-    # queryset = Student.objects.all()
-    # serializer_class = StudentSerializer
+    queryset = Inventory.objects.all()
+    serializer_class = InventorySerializer
 
 class CustomerViewSet(viewsets.ModelViewSet): #This is the end point
-#     queryset = Instructor.objects.all()
-#     serializer_class = InstructorSerializer
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
 
 # def get_letter_grade(obj):
 #         if (obj.score >= 90):
@@ -26,17 +26,33 @@ class CustomerViewSet(viewsets.ModelViewSet): #This is the end point
 #             return 'F'
 
 class OrderViewSet(viewsets.ModelViewSet): #This is the end point
-    # queryset = Course.objects.all()
-    # serializer_class = CourseSerializer
+    queryset = Order.objects.all() # Used to retrieve data from the database
+    serializer_class = OrderSerializer 
 
-    # def destroy(self, request, pk=None):
+    def create(self, request):
+        mutable_data_copy = request.data.copy()
+        item_id = mutable_data_copy.get('item')
+        item = Inventory.objects.get(pk=item_id) # The two tables talk to each other now
+        qty_ordered = int(mutable_data_copy.get('qty'))
+
+        serializer = self.get_serializer(data=mutable_data_copy)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+
+        item.in_stock -= qty_ordered
+        item.save()
+        
+        return Response(serializer.data)
+        
+    
+    
+ # def destroy(self, request, pk=None):
     #     course = self.get_object()
     #     if Grade.objects.filter(course=course).exists():
     #         raise ValidationError({'detail': 'Cannot Delete Course because it has associated grades'})
         
     #     self.perform_destroy(course)
     #     return Response()
-
 
 # class GradeViewSet(viewsets.ModelViewSet): #This is the end point
 #     queryset = Grade.objects.all()

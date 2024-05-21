@@ -4,14 +4,14 @@ from .models import Inventory, Customer, Order
 class InventorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Inventory
-        fields = ['id', 'name', 'age', 'courses']
+        fields = ['id', 'in_stock', 'item']
 
-class InstructorSerializer(serializers.ModelSerializer):
+class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
-        fields = ['id', 'name']
+        fields = ['id', 'first_name', 'last_name']
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ['id', 'name', 'instructor']
+        fields = ['id', 'customer', 'item', 'date', 'paid', 'qty']
